@@ -1,0 +1,118 @@
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE, dpi = 200)
+```
+
+```{r}
+# load data 
+library(readr)
+library(here)
+library(tidyverse)
+eng <- read.csv(here("data", "tidy", "eng_tidy.csv"))
+pol <- read.csv(here("data", "tidy", "polish_tidy.csv"))
+nor <- read.csv(here("data", "tidy", "nor_tidy.csv"))
+```
+
+
+# English ratings 
+
+The English ratings look pretty good in the acceptable condition - as `rating` increases, the quantity of `responses` increases. The opposite trend is seen in the unacceptable condition, where lower ratings receive more responses. 
+
+```{r}
+knitr::include_graphics(path = here("plots", "eng_full.png"))
+```
+
+```{r}
+eng %>% 
+   filter(acceptable == "acceptable") %>% 
+  group_by(rating) %>%
+  summarise(n = n()) %>% 
+  knitr::kable(caption = "English acceptable")
+
+```
+
+```{r}
+eng %>% 
+   filter(acceptable == "unacceptable") %>% 
+  group_by(rating) %>%
+  summarise(n = n()) %>% 
+  knitr::kable(caption = "English unacceptable")
+
+```
+
+```{r, dpi = 300}
+eng %>% 
+  group_by(rating, acceptable) %>%
+  summarise(n = n()) %>% 
+  ggplot(aes(x = rating, y = n, color = acceptable)) + geom_line() + ggtitle("English")
+
+```
+
+# Polish ratings 
+
+Polish ratings aren't cooperating quite as nicely. The acceptable condition looks promising, but the inverse trend is not evident in the unacceptable condition. 
+
+```{r}
+knitr::include_graphics(path = here("plots", "pol_full.png"))
+```
+```{r}
+pol %>% 
+   filter(acceptable == "acceptable") %>% 
+  group_by(rating) %>%
+  summarise(n = n()) %>% 
+  knitr::kable(caption = "Polish acceptable")
+
+```
+
+```{r}
+pol %>% 
+   filter(acceptable == "unacceptable") %>% 
+  group_by(rating) %>%
+  summarise(n = n()) %>% 
+  knitr::kable(caption = "Polish unacceptable")
+
+```
+
+```{r}
+pol %>% 
+  group_by(rating, acceptable) %>%
+  summarise(n = n()) %>% 
+  ggplot(aes(x = rating, y = n, color = acceptable)) + geom_line() + ggtitle("Polish")
+```
+
+# Norwegian ratings 
+
+Norwegian ratings are showing a similar trend to the Polish ones. It seems like acceptable stimuli are accepted more or less as expected (5 has the most ratings, followed by 4 and so on). The unacceptable stimuli do not follow an inverse trend. 
+
+```{r}
+knitr::include_graphics(path = here("plots", "nor_full.png"))
+```
+
+```{r}
+nor %>% 
+   filter(acceptable == "acceptable") %>% 
+  group_by(rating) %>%
+  summarise(n = n()) %>% 
+  knitr::kable(caption = "Norwegian acceptable")
+
+```
+
+```{r}
+nor %>% 
+   filter(acceptable == "unacceptable") %>% 
+  group_by(rating) %>%
+  summarise(n = n()) %>% 
+  knitr::kable(caption = "Norwegian unacceptable")
+
+```
+
+
+
+```{r}
+nor %>% 
+  group_by(rating, acceptable) %>%
+  summarise(n = n()) %>% 
+  ggplot(aes(x = rating, y = n, color = acceptable)) + geom_line() + ggtitle("Norwegian")
+```
+
+
+

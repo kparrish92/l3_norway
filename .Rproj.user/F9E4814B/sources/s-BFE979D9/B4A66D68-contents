@@ -1,0 +1,73 @@
+# number of ratings of acceptable stim in norway 
+norway_data %>% 
+  filter(acceptable == "acceptable") %>% 
+  group_by(rating) %>% 
+  summarise(n = n()) 
+
+norway_data_a <- norway_data %>% 
+    filter(acceptable == "acceptable") 
+  
+  ggplot(norway_data_a, aes(
+    x = tran,
+    y = rating,
+    fill = poss
+  )) +
+    geom_point(
+      data = norway_data_a,
+      aes(
+        x = tran,
+        y = rating,
+        colour = tran,
+        shape = poss
+      ),
+      show.legend = FALSE,
+      position = position_jitterdodge(
+        jitter.width = .08,
+        jitter.height = 0.16,
+        dodge.width = .2
+      ),
+      size = 2,
+      alpha = .6,
+      shape = 20,
+      inherit.aes = FALSE
+    ) + ggtitle("Norweigen acceptable stimuli")
+  
+  
+  
+  norway_data %>% 
+    filter(acceptable == "unacceptable") %>% 
+    group_by(rating) %>% 
+    summarise(n = n())
+  
+  
+  norway_data_u <- norway_data %>% 
+    filter(acceptable == "unacceptable") 
+  
+  
+  ggplot(norway_data_u, aes(
+    x = tran,
+    y = rating,
+    fill = poss
+  )) +
+    geom_point(
+      data = norway_data_u,
+      aes(
+        x = tran,
+        y = rating,
+        colour = tran,
+        shape = poss
+      ),
+      show.legend = FALSE,
+      position = position_jitterdodge(
+        jitter.width = .08,
+        jitter.height = 0.16,
+        dodge.width = .2
+      ),
+      size = 2,
+      alpha = .6,
+      shape = 20,
+      inherit.aes = FALSE
+    ) + ggtitle("norweigen unacceptable stimuli")
+  
+  
+  
