@@ -12,8 +12,13 @@ pol <- read.csv(here("data", "tidy", "polish_tidy.csv"))
 nor <- read.csv(here("data", "tidy", "nor_tidy.csv"))
 ```
 
+# Overview
 
-# English ratings 
+Here is an overview of the pilot data. Each language has a total of 4 visuals to aid in making conclusions about the pilot data, 2 plots and 2 tables. In the scatterplot, rating is plotted as a function of condition, where the number of points correspond to the number of responses of a particular rating in a particular condition.
+In the in the line graph, you can see the number of responses plotted as a function of condition (acceptable or unacceptable). 
+Two tables are also included which list the quantity of responses for each rating per condition.
+
+## English ratings 
 
 The English ratings look pretty good in the acceptable condition - as `rating` increases, the quantity of `responses` increases. The opposite trend is seen in the unacceptable condition, where lower ratings receive more responses. 
 
@@ -47,7 +52,7 @@ eng %>%
 
 ```
 
-# Polish ratings 
+## Polish ratings 
 
 Polish ratings aren't cooperating quite as nicely. The acceptable condition looks promising, but the inverse trend is not evident in the unacceptable condition. 
 
@@ -79,7 +84,7 @@ pol %>%
   ggplot(aes(x = rating, y = n, color = acceptable)) + geom_line() + ggtitle("Polish")
 ```
 
-# Norwegian ratings 
+## Norwegian ratings 
 
 Norwegian ratings are showing a similar trend to the Polish ones. It seems like acceptable stimuli are accepted more or less as expected (5 has the most ratings, followed by 4 and so on). The unacceptable stimuli do not follow an inverse trend. 
 
@@ -114,5 +119,15 @@ nor %>%
   ggplot(aes(x = rating, y = n, color = acceptable)) + geom_line() + ggtitle("Norwegian")
 ```
 
+## Conclusions 
 
+Overall, the acceptable conditions are being responded to as expected. There is a higher quantity of responses per rating as rating increases. The unacceptable condition should show an inverse trend, in which the quantity of responses is higher in the lower ratings. This trend is only evident in the English responses. 
+
+In terms of analysis, an ordinal logistic regression would likely be a good candidate here. In an ordinal logistic regression, the outcome variable (the ratings) is an ordered variable, which indicates that the distance between rating points is not always equal (i.e. the magnitude of difference between response behavior from ratings of 2 and 3 versus the of difference between response behavior of difference between 3 and 4 is likely distinct). 
+
+I know that some studies have used this type of and done a logistic regression by combining 1-2 and 3-4 into one category. This method would tell you the likelihood (probability in log odds) given your predictors that a participant would respond 3-4 (if the scale was 1-4, of course). This analytical strategy can provide some information, but it defeats the purpose of using a nuanced likert-scale and is essentially the same as providing the participants with a binary response variable. 
+
+Another possibility is sticking to descriptive statistics. This is not always an appealing option, particularly since it's likely that reviewers would not like a purely descriptive approach. Plonsky and Oswald (2015) advocate for the use of descriptive statistics when samples are low, rather than using parametric statistical tests that pull from some probability distribution, such as a t-test or type of regression (including ANOVA, bivariate regression and generalized linear mixed effects models). As an alternative, they advocate for reporting an effect size (mean difference between groups or conditions in deviation space) together with a confidence interval, for example. 
+
+A final option in the world of regression is to leave the frequentist analyses behind and do a Bayesian ordinal logistic regression. This analysis is the most challenging to me, but could have the most upside in that it better quantifies uncertainty around estimates and it deals well with small sample sizes relative to its frequentist counterpart. The Bayesian oridinal logistic regression would be analogous to the frequentist version, but, rather than a single esimate that frequentist models produce, Bayesian models provide an entire distribution of plausible parameter estimates. When this distribution is quite wide, it's evident that the certainty around the most plausible parameter estimate is low. 
 
