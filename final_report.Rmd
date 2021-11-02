@@ -1,32 +1,178 @@
-```{r}
+
+```{r, include=FALSE}
 library(here)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE, fig.width = 7, fig.height = 6)
+library(here)
+library(ggpubr)
+library(tidyverse)
+eng <- read.csv(here("data", "eng.csv"))
+pol <- read.csv(here("data", "pol.csv"))
+nor <- read.csv(here("data", "nor.csv"))
+```
+
+# Statistical analysis
+Here are some descriptive statistics and visualizations using both Bayesian and Frequentist models. In the case of the models, one of each a Bayesian and Frequentist mixed effects logistic ordinal regression model was run per language run where the ordered factor `rating` (1-5) was the outcome variable, and `sentence type` was the predictor (In Polish and Norwegian: 4 conditions, ditransitive reflexive, ditransitive possessive, monotransitive reflexive, monotransitive possessive; English 4 conditions: monotrasitive possesive, ditransitive possessive, monotransitive using "own", and ditransitive using "own". Random intercepts were added per participant in order to account for the nexted structure of the data in both types of model. 
+
+# Results 
+
+The tables below detail the descriptive statistics for each sentence type and the quantity of ratings for each condition. 
+
+```{r, echo=FALSE, include=FALSE}
+unacceptable_mono_poss_pol <- pol %>% 
+  filter(sentence_type_pol == "unacceptable_mono_poss") %>% 
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(unacceptable_mono_own = n()) 
+
+unacceptable_di_poss_pol <- pol %>% 
+  filter(sentence_type_pol == "unacceptable_di_poss") %>% 
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(unacceptable_di_poss = n()) 
+
+acceptable_mono_refl_pol <- pol %>% 
+  filter(sentence_type_pol == "acceptable_mono_refl") %>% 
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(acceptable_mono_refl = n()) 
+
+acceptable_di_refl_pol <- pol %>% 
+  filter(sentence_type_pol == "acceptable_di_refl") %>%
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(acceptable_di_refl = n()) 
+
+
+acceptable_mono_refl_pol$rating
+acceptable_mono_refl_pol$acceptable_mono_refl
+acceptable_di_refl_pol$rating
+acceptable_di_refl_pol$acceptable_di_refl
+
+ac_p <- data.frame(rating = 1:5, 
+                   "acceptable_mono_refl_pol" = c(0, 1, 2, 3, 19),
+                   "acceptable_di_refl" = c(0, 4, 0, 4, 18))
+
+un_p <- left_join(unacceptable_mono_poss_pol, unacceptable_di_poss_pol,
+          by = "rating")
 ```
 
 
-**Posterior distrubtions of Polish ratings per conditions based Bayesian Ordinal Regression**
+```{r}
+left_join(ac_p, un_p, by = "rating") %>% 
+  knitr::kable(caption = "Polish descriptive ratings")
+```
+
+
+```{r}
+unacceptable_mono_own_eng <- eng %>% 
+  filter(sentence_type_eng == "unacceptable_mono_own") %>% 
+  group_by(rating) %>%
+  summarise(unacceptable_mono_own = n()) 
+
+unacceptable_di_own_eng <- eng %>% 
+  filter(sentence_type_eng == "unacceptable_di_own") %>% 
+  group_by(rating) %>%
+  summarise(unacceptable_di_own = n()) 
+
+acceptable_mono_poss_eng <- eng %>% 
+  filter(sentence_type_eng == "acceptable_mono_poss") %>% 
+  group_by(rating) %>%
+  summarise(acceptable_mono_poss = n()) 
+
+acceptable_di_poss_eng <- eng %>% 
+  filter(sentence_type_eng == "acceptable_di_poss") %>% 
+  group_by(rating) %>%
+  summarise(acceptable_di_poss = n()) 
+
+un <- left_join(unacceptable_mono_own_eng, unacceptable_di_own_eng,
+          by = "rating")
+
+ac <- left_join(acceptable_mono_poss_eng,  acceptable_di_poss_eng,
+          by = "rating")
+
+left_join(ac, un, by = "rating") %>% 
+  knitr::kable(caption = "English descriptive ratings")
+```
+
+```{r}
+
+unacceptable_mono_poss_nor <- nor %>% 
+  filter(sentence_type_nor == "unacceptable_mono_poss") %>% 
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(unacceptable_mono_own = n()) 
+
+unacceptable_di_poss_nor <- nor %>% 
+  filter(sentence_type_nor == "unacceptable_di_poss") %>% 
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(unacceptable_di_poss = n()) 
+
+acceptable_mono_refl_nor <- nor %>% 
+  filter(sentence_type_nor == "acceptable_mono_refl") %>% 
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(acceptable_mono_refl = n()) 
+
+acceptable_di_refl_nor <- nor %>% 
+  filter(sentence_type_nor == "acceptable_di_refl") %>%
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(acceptable_di_refl = n()) 
+
+un_p <- left_join(unacceptable_mono_poss_nor, unacceptable_di_poss_nor,
+                  by = "rating")
+
+ac_p <- left_join(acceptable_mono_refl_nor,  acceptable_di_refl_nor,
+                  by = "rating")
+
+left_join(ac_p, un_p, by = "rating") %>% 
+  knitr::kable(caption = "Norwegian descriptive ratings")
+
+```
+
+**Posterior distributions of Polish ratings per conditions based on Bayesian Ordinal Regression**
+
+# Visualization of results 
+
+The two plots below show the output of a Bayesian Ordinal Logistic regression (in the first plot), and probability curves per condition in the second plot. In plot 1, the points represent the probability (y-axis) and 95% confidence intervals per condition (x-axis). In the second plot, the vertical lines represent each condition, where the individual lines are probabilities of a rating per condition. The closer the vertical lines are together, the closer those conditions are rated in a particular language.
+
+I sent these plots and individual files: 
+
+Polish plot 1 = `polish_cond_eff.png`
+Polish plot 2 = `polish_prob_curve.png`
+Norwegian plot 1 = `norway_cond_eff.png`
+Norwegian plot 2 = `norwegian_prob_curve.png`
+English plot 1 = `eng_cond_eff.png`
+English plot 2 = `english_prob_curve.png`
+
+Looking at the data, it seems like the participants are following similar trends in Polish and Norwegian, in which they accept the conditions that were designed to be acceptable, but show variability in the unacceptable conditions. In English, the participants showed the highest probability of rating the  the unacceptable conditions as 1 and accepting the acceptable conditions with 5. 
+
+Interpreting the model output to find the specific probabilities per step would take a little more time, since some calculation is necessary based on the model output. Luckily, the package I used (`brms`), creates the conditional effects plots by default and hand calculation is not necessary. Also, it can be seen in the graphics where the approximate probabilities per step lie, so the specific numbers would help to describe the graphics in prose more than they would help.
+
 ```{r}
 knitr::include_graphics(here("plots", "polish_cond_eff.png"))
 ```
 
-**Probability curve of Polish data**
 ```{r}
 knitr::include_graphics(here("plots", "polish_prob_curve.png"))
 ````
 
-**Posterior distrubtions of Norwegian ratings per conditions based Bayesian Ordinal Regression**
+**Posterior distributions of Norwegian ratings per conditions based on Bayesian Ordinal Regression**
 ```{r}
 knitr::include_graphics(here("plots", "norway_cond_eff.png"))
 ```
-**Probability curve of Norwegian data**
+
 ```{r}
 knitr::include_graphics(here("plots", "norwegian_prob_curve.png"))
 ````
 
-**Posterior distrubtions of English ratings per conditions based Bayesian Ordinal Regression**
+
+**Posterior distributions of English ratings per conditions based on Bayesian Ordinal Regression**
 ```{r}
 knitr::include_graphics(here("plots", "eng_cond_eff.png"))
 ```
-**Probability curve of English data**
+
 ```{r}
 knitr::include_graphics(here("plots", "english_prob_curve.png"))
 ````

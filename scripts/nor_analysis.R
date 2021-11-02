@@ -1,7 +1,13 @@
+library(tidyverse)
+library(here)
 # norway analysis 
 
 norway_data <- read.csv(here("data", "nor.csv"))
-norway_data$rating <- as.factor(norway_data$rating)
+
+polish_data <- read.csv(here("data", "pol.csv"))
+
+english_data <- read.csv(here("data", "eng.csv"))
+
 
 # Find best fitting norway model 
 m0 <- polr(rating ~ 1, 
@@ -65,3 +71,34 @@ nor_probs <- rbind(nor_probs1,
 
 nor_probs %>% 
   write.csv(here("data", "tidy", "nor_probs.csv"))
+
+norway_data <- norway_data %>% 
+  filter(!is.na(rating))
+
+norway_data$rating <- as.integer(norway_data$rating)
+
+glimpse(norway_data)
+
+fit_sc1 <- brm(
+  formula = rating ~ 1 + sentence_type_nor, 
+  data = norway_data, 
+  family = cumulative("probit"))
+
+summary(fit_sc1)
+marginal_effects(fit_sc1, "sentence_type_nor", categorical = TRUE)
+
+fit_sc2 <- brm(
+  formula = as.integer(rating) ~ 1 + sentence_type_pol, 
+  data = polish_data, 
+  family = cumulative("probit"))
+
+summary(fit_sc2)
+conditional_effects(fit_sc2, "sentence_type_pol", categorical = TRUE)
+
+fit_sc3 <- brm(
+  formula = as.integer(rating) ~ 1 + sentence_type_eng, 
+  data = english_data, 
+  family = cumulative("probit"))
+
+summary(fit_sc3)
+conditional_effects(fit_sc3, "sentence_type_eng", categorical = TRUE)

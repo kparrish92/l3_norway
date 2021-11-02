@@ -7,9 +7,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE, dpi = 200)
 library(readr)
 library(here)
 library(tidyverse)
-eng <- read.csv(here("data", "tidy", "eng_tidy.csv"))
-pol <- read.csv(here("data", "tidy", "polish_tidy.csv"))
-nor <- read.csv(here("data", "tidy", "nor_tidy.csv"))
+eng <- read.csv(here("data", "eng.csv"))
+pol <- read.csv(here("data", "pol.csv"))
+nor <- read.csv(here("data", "nor.csv"))
 ```
 
 # Overview
@@ -27,12 +27,34 @@ knitr::include_graphics(path = here("plots", "eng_full.png"))
 ```
 
 ```{r}
-eng %>% 
-   filter(acceptable == "acceptable") %>% 
+unacceptable_mono_own_eng <- eng %>% 
+  filter(sentence_type_eng == "unacceptable_mono_own") %>% 
   group_by(rating) %>%
-  summarise(n = n()) %>% 
-  knitr::kable(caption = "English acceptable")
+  summarise(unacceptable_mono_own = n()) 
 
+unacceptable_di_own_eng <- eng %>% 
+  filter(sentence_type_eng == "unacceptable_di_own") %>% 
+  group_by(rating) %>%
+  summarise(unacceptable_di_own = n()) 
+
+acceptable_mono_poss_eng <- eng %>% 
+  filter(sentence_type_eng == "acceptable_mono_poss") %>% 
+  group_by(rating) %>%
+  summarise(acceptable_mono_poss = n()) 
+
+acceptable_di_poss_eng <- eng %>% 
+  filter(sentence_type_eng == "acceptable_di_poss") %>% 
+  group_by(rating) %>%
+  summarise(acceptable_di_poss = n()) 
+
+un <- left_join(unacceptable_mono_own_eng, unacceptable_di_own_eng,
+          by = "rating")
+
+ac <- left_join(acceptable_mono_poss_eng,  acceptable_di_poss_eng,
+          by = "rating")
+
+left_join(ac, un, by = "rating") %>% 
+  knitr::kable()
 ```
 
 ```{r}
