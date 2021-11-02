@@ -1,0 +1,32 @@
+```{r}
+library(here)
+```
+
+
+**Posterior distrubtions of Polish ratings per conditions based Bayesian Ordinal Regression**
+```{r}
+knitr::include_graphics(here("plots", "polish_cond_eff.png"))
+```
+
+**Probability curve of Polish data**
+```{r}
+knitr::include_graphics(here("plots", "polish_prob_curve.png"))
+````
+
+**Posterior distrubtions of Norwegian ratings per conditions based Bayesian Ordinal Regression**
+```{r}
+knitr::include_graphics(here("plots", "norway_cond_eff.png"))
+```
+**Probability curve of Norwegian data**
+```{r}
+knitr::include_graphics(here("plots", "norwegian_prob_curve.png"))
+````
+
+**Posterior distrubtions of English ratings per conditions based Bayesian Ordinal Regression**
+```{r}
+knitr::include_graphics(here("plots", "eng_cond_eff.png"))
+```
+**Probability curve of English data**
+```{r}
+knitr::include_graphics(here("plots", "english_prob_curve.png"))
+````

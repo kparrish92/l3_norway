@@ -17,7 +17,7 @@ data_df <- read.csv(here::here("data", "raw_data.xlsx"))
 
 # read and tidy data for each language
 polish_data <- read.csv(here("data", "pol.csv")) %>% 
-  separate(sentence_type_pol, into = c("acceptable", "tran", "poss"), 
+  separate(sentence_type_pol, into = c("acceptable", "type"), 
            sep = "_") %>% 
   mutate(group = "Polish")
 
