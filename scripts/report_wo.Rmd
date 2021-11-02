@@ -1,0 +1,167 @@
+
+```{r, include=FALSE}
+library(here)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE, fig.width = 7, fig.height = 6)
+library(here)
+library(ggpubr)
+library(tidyverse)
+eng <- read.csv(here("data", "word_order", "eng.csv"))
+pol <- read.csv(here("data", "word_order", "pol.csv"))
+nor <- read.csv(here("data", "word_order", "nor.csv"))
+```
+
+# Statistical analysis
+This analysis is essentially the same as the first, where I ran both Bayesian and Frequentist mixed effects logistic ordinal regression models. Again, the ordered factor `rating` (1-5) was the outcome variable, and `sentence type` was the predictor. In this case, all 4 languages had the same sentence types, in which ad adverb was pre or post verb in a either a main or relative clause. 
+Just like the first dataset, random intercepts were added per participant in order to account for the nested structure of the data in both types of model. 
+
+# Results 
+
+The tables below detail the descriptive statistics for each sentence type and the quantity of ratings for each condition. 
+
+```{r, echo=FALSE, include=FALSE}
+main_pre_verb <- pol %>% 
+  filter(sentence_type == "main_pre_verb") %>% 
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(main_pre_verb = n()) 
+
+main_post_verb <- pol %>% 
+  filter(sentence_type == "main_post_verb") %>% 
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(main_post_verb = n()) 
+
+relative_pre_verb <- pol %>% 
+  filter(sentence_type == "relative_pre_verb") %>% 
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(relative_pre_verb = n()) 
+
+relative_post_verb <- pol %>% 
+  filter(sentence_type == "relative_post_verb") %>%
+  filter(!is.na(rating)) %>% 
+  group_by(rating) %>%
+  summarise(relative_post_verb = n()) 
+
+ac_p <- left_join(main_post_verb,  main_pre_verb,
+          by = "rating")
+
+un_p <- left_join(relative_post_verb, relative_pre_verb,
+          by = "rating")
+```
+
+
+```{r}
+left_join(ac_p, un_p, by = "rating") %>% 
+  knitr::kable(caption = "Polish descriptive ratings")
+```
+
+
+```{r}
+main_pre_verb_eng <- eng %>% 
+  filter(sentence_type == "main_pre_verb") %>% 
+  group_by(rating) %>%
+  summarise(main_pre_verb = n()) 
+
+main_post_verb_eng <- eng %>% 
+  filter(sentence_type == "main_post_verb") %>% 
+  group_by(rating) %>%
+  summarise(main_post_verb = n()) 
+
+relative_pre_verb_eng <- eng %>% 
+  filter(sentence_type == "relative_pre_verb") %>% 
+  group_by(rating) %>%
+  summarise(relative_pre_verb = n()) 
+
+relative_post_verb_eng <- eng %>% 
+  filter(sentence_type == "relative_post_verb") %>% 
+  group_by(rating) %>%
+  summarise(relative_post_verb = n()) 
+
+un <- left_join(main_pre_verb_eng, main_post_verb_eng,
+          by = "rating")
+
+ac <- left_join(relative_pre_verb_eng,  relative_post_verb_eng,
+          by = "rating")
+
+left_join(ac, un, by = "rating") %>% 
+  knitr::kable(caption = "English descriptive ratings")
+```
+
+```{r}
+main_pre_verb_nor <- nor %>% 
+  filter(sentence_type == "main_pre_verb") %>% 
+  group_by(rating) %>%
+  summarise(main_pre_verb = n()) 
+
+main_post_verb_nor <- nor %>% 
+  filter(sentence_type == "main_post_verb") %>% 
+  group_by(rating) %>%
+  summarise(main_post_verb = n()) 
+
+relative_pre_verb_nor <- nor %>% 
+  filter(sentence_type == "relative_pre_verb") %>% 
+  group_by(rating) %>%
+  summarise(relative_pre_verb = n()) 
+
+relative_post_verb_nor <- nor %>% 
+  filter(sentence_type == "relative_post_verb") %>% 
+  group_by(rating) %>%
+  summarise(relative_post_verb = n()) 
+
+unn <- left_join(main_pre_verb_nor, main_post_verb_nor,
+                by = "rating")
+
+acn <- left_join(relative_pre_verb_nor,  relative_post_verb_nor,
+                by = "rating")
+
+left_join(acn, unn, by = "rating") %>% 
+  knitr::kable(caption = "Norwegian descriptive ratings")
+```
+
+
+# Visualization of results 
+
+Same as the first analyiss, the two plots below show the output of a Bayesian Ordinal Logistic regression (in the first plot), and probability curves per condition in the second plot. In plot 1, the points represent the probability (y-axis) and 95% confidence intervals per condition (x-axis). In the second plot, the vertical lines represent each condition, where the individual lines are probabilities of a rating per condition. The closer the vertical lines are together, the closer those conditions are rated in a particular language.
+
+Here are the file names of the plots in this page: 
+
+Polish plot 1 = `polish_word_order.png`
+
+Polish plot 2 = `polish_prob_curve_word_order.png`
+
+Norwegian plot 1 = `norwegian_word_order.png`
+
+Norwegian plot 2 = `norwegian_prob_curve_word_order.png`
+
+English plot 1 = `english_word_order.png`
+
+English plot 2 = `english_prob_curve_word_order.png`
+
+
+**Posterior distributions of Polish ratings per conditions based on Bayesian Ordinal Regression**
+```{r}
+knitr::include_graphics(here("plots", "word_order", "pol_word_order.png"))
+```
+
+```{r}
+knitr::include_graphics(here("plots", "word_order", "polish_prob_curve_word_order.png"))
+````
+
+**Posterior distributions of Norwegian ratings per conditions based on Bayesian Ordinal Regression**
+```{r}
+knitr::include_graphics(here("plots", "word_order", "nor_word_order.png"))
+```
+
+```{r}
+knitr::include_graphics(here("plots", "word_order", "norwegian_prob_curve_word_order.png"))
+````
+
+**Posterior distributions of English ratings per conditions based on Bayesian Ordinal Regression**
+```{r}
+knitr::include_graphics(here("plots", "word_order", "eng_word_order.png"))
+```
+
+```{r}
+knitr::include_graphics(here("plots", "word_order", "english_prob_curve_word_order.png"))
+```
