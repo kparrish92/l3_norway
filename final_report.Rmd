@@ -140,10 +140,15 @@ The two plots below show the output of a Bayesian Ordinal Logistic regression (i
 I sent these plots and individual files: 
 
 Polish plot 1 = `polish_cond_eff.png`
+
 Polish plot 2 = `polish_prob_curve.png`
+
 Norwegian plot 1 = `norway_cond_eff.png`
+
 Norwegian plot 2 = `norwegian_prob_curve.png`
+
 English plot 1 = `eng_cond_eff.png`
+
 English plot 2 = `english_prob_curve.png`
 
 Looking at the data, it seems like the participants are following similar trends in Polish and Norwegian, in which they accept the conditions that were designed to be acceptable, but show variability in the unacceptable conditions. In English, the participants showed the highest probability of rating the  the unacceptable conditions as 1 and accepting the acceptable conditions with 5. 
