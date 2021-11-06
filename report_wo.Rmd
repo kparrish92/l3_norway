@@ -165,3 +165,33 @@ knitr::include_graphics(here("plots", "word_order", "eng_word_order.png"))
 ```{r}
 knitr::include_graphics(here("plots", "word_order", "english_prob_curve_word_order.png"))
 ```
+
+
+
+# Visualizations per condition between languages
+
+As we discussed, here are the ratings of each condition per language. Again, probability is on the y-axis and each color represents a rating. The error bars are the 95% confidence interval of the estimates produced by the Bayesian ordinal regression model. 
+You could save these by right clicking, but the files are also available in the repository under `plots/word_order`
+
+File names: 
+
+`main_pre.png`
+
+`main_post.png`
+
+`rel_pre.png`
+
+`rel_post.png`
+
+```{r}
+knitr::include_graphics(here("plots", "word_order", "main_pre.png"))
+```
+```{r}
+knitr::include_graphics(here("plots", "word_order", "main_post.png"))
+```
+```{r}
+knitr::include_graphics(here("plots", "word_order", "rel_pre.png"))
+```
+```{r}
+knitr::include_graphics(here("plots", "word_order", "rel_post.png"))
+```
