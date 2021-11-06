@@ -23,6 +23,9 @@ pol_probs_df <- data.frame(pol_probs[["sentence_type:cats__"]])  %>%
 # combine the dfs from the conditional effects objects 
 all_df <- rbind(english_probs, pol_probs_df, nor_probs_df)
 
+pos <- position_dodge(.2)
+lim <- aes(ymin=lower__, ymax=upper__)
+
 # plot per condition
 all_df %>% 
   filter(sentence_type == "main_post_verb") %>% 

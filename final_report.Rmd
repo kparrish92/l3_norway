@@ -181,3 +181,23 @@ knitr::include_graphics(here("plots", "eng_cond_eff.png"))
 ```{r}
 knitr::include_graphics(here("plots", "english_prob_curve.png"))
 ````
+
+
+
+# Plots of conditions between languages 
+
+```{r}
+knitr::include_graphics(here("plots", "mono_poss.png"))
+````
+
+```{r}
+knitr::include_graphics(here("plots", "di_poss.png"))
+````
+
+```{r}
+knitr::include_graphics(here("plots", "mono_refl.png"))
+````
+
+```{r}
+knitr::include_graphics(here("plots", "di_refl.png"))
+````
